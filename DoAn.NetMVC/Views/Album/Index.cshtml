@@ -1,0 +1,118 @@
+﻿@model List<DoAn.NetMVC.Models.Album>
+
+@using System.Data.Linq
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_MainLayout.cshtml";
+}
+
+@section css {
+<link href="~/Contents/CSS/Album.css" rel="stylesheet" />
+<link href="~/Contents/CSS/UploadButton.css" rel="stylesheet" />
+<link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Contents/JS/jquery.lightbox_me.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+<style>
+    div.wrapper {
+        float: left; /* important */
+        position: relative; /* important(so we can absolutely position the description div */
+        margin: 2px;
+    }
+
+    div.description {
+        position: absolute; /* absolute position (so we can position it where we want)*/
+        bottom: 0px; /* position will be on bottom */
+        left: 0px;
+        width: 100%;
+        /* styling bellow */
+        background-color: black;
+        font-family: 'tahoma';
+        font-size: 15px;
+        color: white;
+        opacity: 0.6; /* transparency */
+        filter: alpha(opacity=60); /* IE transparency */
+    }
+
+    p.description_content {
+        padding: 10px;
+        margin: 0px;
+    }
+</style>
+}
+
+@section title {
+    Bộ sưu tập
+}
+
+
+@foreach (var i in Model)
+{
+    <!-- wrapper div -->
+    <a href="@Url.Action("Detail", "Album", new { maAlbum = i.MaAlbum })">
+        <div class="wrapper" album-des="@i.MoTa" album-name="@i.TenAlbum">
+            <!-- image -->
+            @if (i.DanhSachHinhTrongAlbums.Count == 0)
+            {
+                <img src="/Contents/Imgs/no-image-available.jpg" />
+            }
+            else
+            {
+                <img src="@("Contents/Imgs/" + i.DanhSachHinhTrongAlbums.Last().KhoHinh.MaHinh + i.DanhSachHinhTrongAlbums.Last().KhoHinh.Duoi)" />
+            }
+            <!-- description div -->
+            <div class="description">
+                <!-- description content -->
+                <p class="description_content">@(string.Format("{0} ({1})", i.TenAlbum, i.DanhSachHinhTrongAlbums.Count)) </p>
+                <!-- end description content -->
+            </div>
+            <!-- end description div -->
+        </div>
+    </a>
+    <!-- end wrapper div -->
+}
+
+<div id="them-bst" style="display: none;">
+
+</div>
+
+@section barbottom {
+<input type="button" value="Thêm bộ sưu tập" class="pumpkin-flat-button btn-add" style="width: 150px;">
+}
+    
+@section endscript {
+<script>
+    $(".btn-add").click(function () {
+        var them = $("#them-bst").clone();
+        $(them).css({ display: "block" });
+        $.ajax({
+            url: '@Url.Action("Add", "Album")',
+            success: function(html) {
+                $(them).html(html);
+                $(them).lightbox_me({
+                    centered: true,
+                    onClose: function () {
+                        $(them).css({ display: "none" });
+                    },
+                    destroyOnClose: true
+                });
+            }
+        })
+    });
+    $(".wrapper").qtip({
+        content: {
+            text: function () {
+                return $(this).attr('album-des');
+            },
+            title: function () {
+                return $(this).attr('album-name');
+            }
+        },
+        position: {
+            my: 'top-left',
+            at: 'top-left',
+        }
+    });
+</script>    
+}

@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+
+@using DoAn.NetMVC.Models
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/Contents/CSS/VerticalMenu.css" rel="stylesheet" />
+    <link href="~/Contents/CSS/MainLayout.css" rel="stylesheet" />
+    <link href="~/Contents/CSS/UploadButton.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    @RenderSection("css", false)
+</head>
+<body>
+    <nav class="menu" tabindex="0">
+        <div class="smartphone-menu-trigger"></div>
+        <header class="avatar">
+            @if (ViewBag.AnhDaiDien == null)
+            {
+                <img src = "/Contents/Imgs/avatars/noavatar.jpg" />
+            }
+            else
+            {
+                <img src="@("/Contents/Imgs/avatars/" + ViewBag.AnhDaiDien)" />
+            }
+            @if (@ViewBag.TenTaiKhoan == null)
+            {
+                <h2>@ViewBag.MaNguoiDung</h2>
+            }
+            else
+            {
+                <h2>@ViewBag.TenTaiKhoan</h2>
+            }
+            @Html.ActionLink("[đăng xuất]", "Index", "Logout", null, new { @class = "logout" })
+        </header>
+        <ul>
+            <li tabindex="0" class="icon-dashboard"><span>@Html.ActionLink("Trang chủ", "Index", "Home")</span></li>
+            <li tabindex="0" class="icon-customers"><span>@Html.ActionLink("Bộ sưu tập", "Index", "Album")</span></li>
+            <li tabindex="0" class="icon-users"><span>@Html.ActionLink("Tài khoản", "Index", "Account")</span></li>
+        </ul>
+    </nav>
+    <div class="content-main">
+        <div class="horizontal-bar">
+            <div class="title">
+                @RenderSection("title")
+            </div>
+            <div class="search">
+                <input type="text" id="search-box" placeholder="tìm kiếm" />
+            </div>
+            <div class="upload">
+                <input type="submit" value="Upload" class="pumpkin-flat-button" onclick="location.href='@Url.Action("Index", "Upload")'">
+            </div>
+        </div>
+        <div class="content">
+            @RenderBody()
+        </div>
+
+        <div class="bar-bottom-hor">
+            @RenderSection("barbottom", false)
+        </div>
+    </div>
+    @RenderSection("endscript", false)
+    <script>
+        var type = '@ViewBag.PageType';
+        $("#search-box").keypress(function (e) {
+            if (e.keyCode == 13) {
+                var text = $(this).val();
+                if (type == "HOME") {
+                    var link = '/Working/TimKiem?text=' + text;
+                    window.location.href = link;
+                }
+                if (type == "ALBUM") {
+
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+﻿@model List<DoAn.NetMVC.Models.KhoHinh>
+
+@{
+    Layout = "~/Views/_MainLayout.cshtml";
+}
+
+@section css {
+    <link href="~/Contents/CSS/ImagesThumb.css" rel="stylesheet" />
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-2.1.0-vsdoc.js"></script>
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+    <script src="~/Contents/JS/jquery.lightbox_me.js"></script>
+    <link href="~/Contents/CSS/UploadButton.css" rel="stylesheet" />
+}
+
+@section title {
+    Album >> @ViewBag.AlbumName
+}
+<div class="wrapper">
+    @{
+        int start = 12 * (ViewBag.Page - 1);
+        int end = start + 11;
+        int totalPages = (Model.Count % 12) == 0 ? (Model.Count / 12) : (Model.Count / 12) + 1;
+        if (end > Model.Count)
+        {
+            end = Model.Count - 1;
+        }
+        string domain = Url.Content("~");
+        int currentPage = ViewBag.Page;
+        int nextPage = (currentPage + 1) > totalPages ? currentPage : (currentPage + 1);
+        int prePage = (currentPage - 1) < 1 ? 1 : (currentPage - 1);
+    }
+
+    @for (int i = start; i <= end; i++)
+    {
+        <div class="img-thumb" img-name="@Model[i].TenHinh" img-description="@Model[i].MoTa">
+            <img src="@(domain + "Contents/Imgs/" + @Model[i].MaHinh + @Model[i].Duoi)" />
+            <img src="@(domain + "Contents/Imgs/" + @Model[i].MaHinh + @Model[i].Duoi)" class="img-preview" style="display:none;" />
+            <div class="img-panel">
+                <button type="button" class="btn-Xem" img-code="@Model[i].MaHinh" img-name="@Model[i].TenHinh">Xem</button>
+                <button type="button" class="btn-Xoa" img-code="@Model[i].MaHinh" img-name="@Model[i].TenHinh">Xóa</button>
+            </div>
+        </div>
+    }
+
+    <div class="panel-sua" style="display:none;">
+
+    </div>
+</div>
+
+<div class="bar-bottom">
+    @if (prePage != currentPage)
+    {
+        <button class="page-left" onclick="location.href='@Url.Action("Index", "Home", new { page = prePage })'"><span><</span></button>
+    }
+    <span>@ViewBag.Page / @totalPages</span>
+    @if (nextPage != currentPage)
+    {
+        <button class="page-right" onclick="location.href='@Url.Action("Index", "Home", new { page = nextPage })'"><span>></span></button>
+    }
+</div>
+
+@section barbottom {
+    <input type="button" value="Xóa album" class="pumpkin-flat-button btn-delete" />    
+}
+
+@section endscript {
+<script>
+    $(".img-thumb").hover(function () {
+        $(this).animate({
+            opacity: "1.0"
+        }, 100);
+        $(this).find(".img-panel").css({ visibility: "visible" });
+    }, function () {
+        $(this).stop();
+        $(this).animate({
+            opacity: "0.8"
+        }, 100);
+        $(this).find(".img-panel").css({ visibility: "hidden" });
+    });
+    $(".img-thumb").qtip({
+        content: {
+            text: function() {
+                return $(this).attr('img-description');
+            },
+            title: function() {
+                return $(this).attr('img-name');
+            }
+        },
+        style: {
+            classes: 'qtip-green'
+        },
+        position: {
+            my: 'top-left',
+            at: 'top-left',
+        }
+    });
+    $(".btn-Xem").click(function () {
+        var img = $(this).parent().parent().find(".img-preview").clone();
+        $(img).css({
+            display: "block",
+            maxWidth: "80%",
+            maxHeight: "80%"
+        });
+        $(img).lightbox_me({
+            centered: true,
+            onClose: function () {
+                $(this).css({
+                    display: "none",
+                });
+            },
+            destroyOnClose: true
+        });
+    });
+    $(".btn-Xoa").click(function () {
+        var name = $(this).attr("img-name");
+        var code = $(this).attr("img-code");
+        if (confirm("Bạn có chắc muốn xóa hình\n" + name + "?")) {
+            var link = '@Url.Action("XoaHinhKhoiAlbum", "Working", new { maHinh = "replace", maAlbum = ViewBag.AlbumCode })';
+            link = link.replace("replace", code);
+            link = link.replace("&amp;", "&");
+            var result = '@Url.Action("Detail")'
+            $.ajax({
+                url: link,
+                success: function (e) {
+                    if (e.thanhcong) {
+                        location.reload();
+                    }
+                }
+            });
+        } else {
+
+        }
+    });
+    $(".btn-delete").click(function () {
+        if (confirm("Bạn có chắc muốn xóa album này?")) {
+            $.ajax({
+                url: '@Url.Action("XoaAlbum", "Working", new { maAlbum = ViewBag.AlbumCode })',
+                success: function (data) {
+                    if (data.thanhcong) {
+                        window.location.href = '@Url.Action("Index", "Album")'
+                    }
+                }
+            });
+        } else {
+
+        }
+    });
+</script>
+}

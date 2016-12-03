@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="IM" Class="IMDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-UUV7A6H\SQLEXPRESS;Initial Catalog=IM;Integrated Security=True;Encrypt=False;TrustServerCertificate=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="IMConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Album" Member="Albums">
+    <Type Name="Album">
+      <Column Name="MaAlbum" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MaNguoiDung" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="TenAlbum" Type="System.String" DbType="NVarChar(100)" CanBeNull="true" />
+      <Column Name="NgayTao" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="MoTa" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Association Name="Album_DanhSachHinhTrongAlbum" Member="DanhSachHinhTrongAlbums" ThisKey="MaAlbum" OtherKey="MaAlbum" Type="DanhSachHinhTrongAlbum" />
+      <Association Name="TaiKhoan_Album" Member="TaiKhoan" ThisKey="MaNguoiDung" OtherKey="MaNguoiDung" Type="TaiKhoan" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.DanhSachHinhTrongAlbum" Member="DanhSachHinhTrongAlbums">
+    <Type Name="DanhSachHinhTrongAlbum">
+      <Column Name="MaAlbum" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MaHinh" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Album_DanhSachHinhTrongAlbum" Member="Album" ThisKey="MaAlbum" OtherKey="MaAlbum" Type="Album" IsForeignKey="true" />
+      <Association Name="KhoHinh_DanhSachHinhTrongAlbum" Member="KhoHinh" ThisKey="MaHinh" OtherKey="MaHinh" Type="KhoHinh" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.TaiKhoan" Member="TaiKhoans">
+    <Type Name="TaiKhoan">
+      <Column Name="MaNguoiDung" Type="System.String" DbType="VarChar(30) NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="MatKhau" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="pathAnhDaiDien" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="TenTaiKhoan" Type="System.String" DbType="NVarChar(10)" CanBeNull="true" />
+      <Column Name="DienThoai" Type="System.String" DbType="VarChar(15)" CanBeNull="true" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50)" CanBeNull="true" />
+      <Association Name="TaiKhoan_Album" Member="Albums" ThisKey="MaNguoiDung" OtherKey="MaNguoiDung" Type="Album" />
+      <Association Name="TaiKhoan_KhoHinh" Member="KhoHinhs" ThisKey="MaNguoiDung" OtherKey="MaNguoiDung" Type="KhoHinh" />
+    </Type>
+  </Table>
+  <Table Name="dbo.KhoHinh" Member="KhoHinhs">
+    <Type Name="KhoHinh">
+      <Column Name="MaHinh" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="DuoiHinh" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="MaNguoiDung" Type="System.String" DbType="VarChar(30)" CanBeNull="true" />
+      <Column Name="TenHinh" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="MoTa" Type="System.String" DbType="NVarChar(MAX)" CanBeNull="true" />
+      <Column Name="Duoi" Type="System.String" DbType="VarChar(10)" CanBeNull="true" />
+      <Column Name="Width" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Height" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="DateUpload" Type="System.DateTime" DbType="Date" CanBeNull="true" />
+      <Column Name="Size" Type="System.String" DbType="Text" CanBeNull="true" UpdateCheck="Never" />
+      <Association Name="KhoHinh_DanhSachHinhTrongAlbum" Member="DanhSachHinhTrongAlbums" ThisKey="MaHinh" OtherKey="MaHinh" Type="DanhSachHinhTrongAlbum" />
+      <Association Name="TaiKhoan_KhoHinh" Member="TaiKhoan" ThisKey="MaNguoiDung" OtherKey="MaNguoiDung" Type="TaiKhoan" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

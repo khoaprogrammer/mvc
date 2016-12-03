@@ -1,0 +1,43 @@
+﻿@model DoAn.NetMVC.Models.Album
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add</title>
+    <style>
+        #add-BST {
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        input[type=text] {
+            height: 30px;
+        }
+
+        input[type=text], textarea {
+            border-radius: 10px;
+            padding: 3px;
+            border: 2px solid #76b852;
+        }
+    </style>
+</head>
+<body>
+    <div id="add-BST">
+        @using (Html.BeginForm())
+        {
+            <p>Tên album</p>
+            <p>@Html.TextBoxFor(x => x.TenAlbum, new { @placeholder = "tên album", @maxlength = 50 })</p>
+            <p>Mô tả</p>
+            <p>@Html.TextAreaFor(x => x.MoTa, new { @rows = "4", @cols = "50" })</p>
+            <p><input type="submit" value="Tạo" class="pumpkin-flat-button" /></p>
+        }
+    </div>
+</body>
+</html>

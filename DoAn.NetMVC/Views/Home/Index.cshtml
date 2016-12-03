@@ -1,0 +1,270 @@
+﻿@model List<DoAn.NetMVC.Models.KhoHinh>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_MainLayout.cshtml";
+}
+
+@section css {
+<link href="~/Contents/CSS/ImagesThumb.css" rel="stylesheet" />
+<link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.css" rel="stylesheet"/>
+<script src="~/Scripts/jquery-2.1.0-vsdoc.js"></script>
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/3.0.3/jquery.qtip.min.js"></script>
+<script src="~/Contents/JS/jquery.lightbox_me.js"></script>
+}
+
+@section title {
+    Trang chủ    
+}
+<div class="wrapper">
+    @{
+        int start = 12 * (ViewBag.Page - 1);
+        int end = start + 11;
+        int totalPages = (Model.Count % 12) == 0 ? (Model.Count / 12) : (Model.Count / 12) + 1;
+        if (end >= Model.Count)
+        {
+            end = Model.Count - 1;
+        }
+        string domain = Url.Content("~");
+        int currentPage = ViewBag.Page;
+        int nextPage = (currentPage + 1) > totalPages ? currentPage : (currentPage + 1);
+        int prePage = (currentPage - 1) < 1 ? 1 : (currentPage - 1);
+    }
+    
+    @for (int i = start; i <= end; i++)
+    {
+        <div class="img-thumb" img-name="@Model[i].TenHinh" img-description="@Model[i].MoTa" img-dim="@Model[i].Width x @Model[i].Height" img-size="@Model[i].Size" img-code="@Model[i].MaHinh" img-date="@Model[i].DateUpload.Value.ToString("dd/MM/yyyy")">
+            <img src="@(domain + "Contents/Imgs/" + @Model[i].MaHinh + @Model[i].Duoi)" />
+            <div class="img-preview" img-index="@(i - (12 * (currentPage - 1)))">
+                <input type="button" class="btn-img-left" value="<" style="position: absolute; top: 50%; width: 50px; height: 50px; border-radius: 10px; font-size: 25px; line-height: 50px; font-weight: bold; color: #76b852; border: 4px solid #76b852; left: 0; background-color: white;" onclick="imgLeftClick(this)">
+                <input type="button" class="btn-img-right" value=">" style="position: absolute; top: 50%; width: 50px; height: 50px; border-radius: 10px; font-size: 25px; line-height: 50px; font-weight: bold; color: #76b852; border: 4px solid #76b852; right: 0; background-color: white;", onclick="imgRightClick(this)">
+            </div>
+            <div class="img-panel">
+                <button type="button" class="btn-Xem" img-code="@Model[i].MaHinh" img-name="@Model[i].TenHinh">Xem</button>
+                <button type="button" class="btn-Xoa" img-code="@Model[i].MaHinh" img-name="@Model[i].TenHinh">Xóa</button>
+                <button type="button" class="btn-Sua" img-code="@Model[i].MaHinh">Sửa</button>
+            </div>
+        </div>
+    }
+
+    <div class="panel-sua" style="display:none;">
+
+    </div>
+</div>
+
+<div class="bar-bottom">
+    @if (prePage != currentPage)
+    {
+        <button class="page-left" onclick="location.href='@Url.Action("Index", "Home", new { page = prePage })'"><span><</span></button>
+    }
+    <span>@ViewBag.Page / @totalPages</span>
+    @if (nextPage != currentPage)
+    {
+        <button class="page-right" onclick="location.href='@Url.Action("Index", "Home", new { page = nextPage })'"><span>></span></button>
+    }
+</div>
+
+@section barbottom {
+    <button class="pumpkin-flat-button btn-select-delete" style="width: 150px; height: 100%; display: none;"></button>
+    <button class="pumpkin-flat-button btn-stop-select" style="height: 100%; display:none">Bỏ chọn</button>    
+}
+
+@section endscript {
+<script>
+    var maxImgIndex = $(".img-thumb").length;
+    var currentImgIndex = -1;
+    var beginSelect = false;
+    var totalSelect = 0;
+    var arr = [];
+    var resetButtonSelect = function () {
+        $(".btn-select-delete").html("Xóa " + totalSelect + " hình");
+    }
+    var imgRightClick = function (button) {
+        var next = $(document).find(".img-preview:eq(" + (currentImgIndex + 1) + ")").parent().find("img").attr("src");
+        if (currentImgIndex == 11 || currentImgIndex == maxImgIndex - 1) {
+            return;
+        }
+        $(button).parent().css({
+            backgroundImage: "url(" + next + ")"
+        });
+        currentImgIndex += 1;
+    };
+
+    var imgLeftClick = function (button) {
+        var next = $(document).find(".img-preview:eq(" + (currentImgIndex - 1) + ")").parent().find("img").attr("src");
+        if (currentImgIndex == 0) {
+            return;
+        }
+        $(button).parent().css({
+            backgroundImage: "url(" + next + ")"
+        });
+        currentImgIndex -= 1;
+    };
+
+    $(".img-thumb").hover(function () {
+        $(this).animate({
+            opacity: "1.0"
+        }, 100);
+        $(this).find(".img-panel").css({ visibility: "visible" });
+    }, function () {
+        $(this).stop();
+        $(this).animate({
+            opacity: "0.8"
+        }, 100);
+        $(this).find(".img-panel").css({ visibility: "hidden" });
+    });
+    $(".img-thumb").qtip({
+        content: {
+            text: function() {
+                var dim = "<b>" + $(this).attr('img-dim') + "</b><br />";
+                var size = "<b>" + $(this).attr('img-size') + "</b><br />";
+                var date = "<b>" + $(this).attr('img-date') + "</b><br /><br />";
+                return dim + size + date + $(this).attr('img-description');
+            },
+            title: function() {
+                return $(this).attr('img-name');
+            }
+        },
+        style: {
+            classes: 'qtip-green'
+        },
+        position: {
+            my: 'top-left',
+            at: 'top-left',
+        }
+    });
+    $(".img-thumb").mousedown(function (e) {
+        if (beginSelect) {
+            var code = parseInt($(this).attr("img-code"));
+            if ($.inArray(code, arr) == -1) {
+                arr.push(code);
+            } else {
+                $(this).css({
+                    border: "none"
+                });
+                totalSelect -= 1;
+                arr = jQuery.grep(arr, function (value) {
+                    return value != code;
+                });
+                resetButtonSelect();
+                if (totalSelect == 0) {
+                    $(".btn-stop-select").trigger("click");
+                }
+                return;
+            }
+            $(this).css({
+                "border": "4px solid red"
+            });
+            totalSelect += 1;
+            resetButtonSelect();
+            return;
+        }
+        clearTimeout(this.downTimer);
+        var current = $(this);
+        this.downTimer = setTimeout(function () {
+            $(current).css({ "border": "4px solid red" });
+            beginSelect = true;
+            $(".btn-select-delete, .btn-stop-select").css({
+                display: "inline"
+            });
+            totalSelect = 1;
+            resetButtonSelect();
+            arr.push(parseInt($(current).attr("img-code")));
+        }, 1200);
+    }).mouseup(function (e) {
+        clearTimeout(this.downTimer);
+    });
+    $(".btn-Xem").click(function () {
+        var imgpre = $(this).parent().parent().find(".img-preview").clone();
+        currentImgIndex = parseInt($(imgpre).attr("img-index"));
+        var imgPath = $(this).parent().parent().find("img").attr("src");
+        $(imgpre).css({
+            display: "block",
+            width: "100%",
+            height: "90%",
+            backgroundImage: "url(" + imgPath + ")",
+            backgroundSize: "auto 100%",
+            backgroundRepeat: "no-repeat",
+            backgroundPosition: "center"
+        });
+        
+        $(imgpre).lightbox_me({
+            centered: true,
+            onClose: function () {
+                $(this).css({
+                    display: "none",
+                });
+            },
+            destroyOnClose: true,
+            overlayCSS: {
+                background: "black",
+                opacity: .8
+            }
+        });
+    });
+    $(".btn-Xoa").click(function () {
+        var name = $(this).attr("img-name");
+        var code = $(this).attr("img-code");
+        if (confirm("Bạn có chắc muốn xóa hình\n" + name + "?")) {
+            var link = '@Url.Action("XoaHinh", "Working", new { maHinh = "replace" })';
+            link = link.replace("replace", code);
+            window.location.href = link;
+        } else {
+
+        }
+    });
+    $(".btn-Sua").click(function () {
+        var code = $(this).attr("img-code");
+        var link = '@Url.Action("SuaHinh", "Working", new { maHinh = "replace", page = currentPage })';
+        link = link.replace("replace", code);
+        var sua = $(".panel-sua").clone();
+        $.ajax({
+            url: link,
+            success: function (result) {
+                $(sua).html(result);
+            }
+        });
+        $(sua).lightbox_me({
+            centered: true,
+            onOpen: function() {
+                $(sua).css({ display: "block" });
+            },
+            onClose: function () {
+                $(".panel-sua").css({ display: "none" });
+                location.reload();
+            },
+            destroyOnClose: true
+        });
+    });
+    $(".btn-select-delete").click(function () {
+        var link = '@Url.Action("XoaNhieuHinh","Working")'
+        $.ajax({
+            url: link,
+            data: {
+                dsMaHinh: arr
+            },
+            traditional: true,
+            success: function (data) {
+                if (data.thanhcong) {
+                    alert("Xóa thành công!");
+                    window.location.href = '@Url.Action("Index", "Home")';
+                }
+            }
+        });
+    });
+    $(".btn-stop-select").click(function () {
+        if (beginSelect) {
+            beginSelect = false;
+            arr = [];
+            $(document).find(".img-thumb").css({
+                border: "none"
+            });
+            $(document).find(".btn-select-delete, .btn-stop-select").css({
+                display: "none"
+            });
+        }
+    });
+</script>
+}

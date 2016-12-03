@@ -1,0 +1,90 @@
+﻿@model DoAn.NetMVC.Models.KhoHinh
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SuaHinh</title>
+    <link href="~/Contents/CSS/UploadButton.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.1.1.min.js"></script>
+    <style>
+        .form-sua {
+            background-color: white;
+            padding: 20px;
+            border-radius: 20px;
+        }
+        input[type=text] {
+            height: 30px;
+            width: 250px;
+        }
+
+        textarea, input[type=text] {
+            border-radius: 10px;
+            padding: 3px;
+            border: 2px solid #76b852;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-sua"> 
+        @using (@Html.BeginForm("SuaHinh", "Working", new { page = ViewBag.CurrentPage }))
+        {
+            @Html.HiddenFor(x => x.MaHinh)
+            <p>Tên hình</p>
+            <p>@Html.TextBoxFor(x => x.TenHinh, new { @type = "text" })</p>
+            <p>Mô tả</p>
+            <p>@Html.TextAreaFor(x => x.MoTa, new { @rows = "4", @cols = "50"})</p>
+            <p>Danh sách album</p>
+            @Html.DropDownList("DSAlbum") 
+            <button type="button" id="add">+</button>
+            <div class="ds-album">
+                @foreach (var i in Model.DanhSachHinhTrongAlbums)
+                {
+                    <p><span album-code="@i.MaAlbum" style="font-weight: bold; color: darkorange;">@i.Album.TenAlbum <a href="#" class="delete">xóa</a></span></p>
+                }
+            </div>
+            <p><input type="submit" value="Sửa" class="pumpkin-flat-button" /></p>
+        }
+    </div>
+    <script>
+        $(".delete").click(function () {
+            var parent = $(this).parent();
+            var maAlbum = $(parent).attr("album-code");
+            var link = '@Url.Action("XoaHinhKhoiAlbum", "Working", new { maAlbum = "replace", Model.MaHinh })';
+            link = link.replace("replace", maAlbum);
+            link = link.replace("&amp;", "&");
+            parent = $(parent).parent();
+            $.ajax({
+                url: link,
+                success: function () {
+                    $(parent).remove();
+                }
+            });
+        });
+
+        $("button").click(function () {
+            var maAlbum = $("select").val();
+            var tenAlbum = $("select").find(":selected").text();
+            var link = '@Url.Action("ThemHinhVaoAlbum", "Working", new { maAlbum = "replace", maHinh = Model.MaHinh })';
+            link = link.replace("replace", maAlbum);
+            link = link.replace("&amp;", "&");
+            var dsAlbum = $(".ds-album");
+            $.ajax({
+                url: link,
+                success: function (json) {
+                    if (!json.thanhcong) {
+                        alert("Thêm thất bại!");
+                    } else {
+                        dsAlbum.append('<p><span album-code="' + maAlbum + '" style="font-weight: bold; color: darkorange;">' + tenAlbum + '<a href="#" class="delete">xóa</a></span></p>');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="IM">
+  <DataContextMoniker Name="/IMDataContext" />
+  <nestedChildShapes>
+    <classShape Id="3fe8326d-94ab-491e-a14d-fcad5f3c57c2" absoluteBounds="3.5, 1.125, 2, 1.7708968098958331">
+      <DataClassMoniker Name="/IMDataContext/Album" />
+      <nestedChildShapes>
+        <elementListCompartment Id="9e6441cc-6e11-4f89-bbe4-4d6e514c5834" absoluteBounds="3.515, 1.585, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="e8a853ce-a205-4e60-b36c-5b560b4df1b4" absoluteBounds="6.25, 3, 2, 1.193992513020834">
+      <DataClassMoniker Name="/IMDataContext/DanhSachHinhTrongAlbum" />
+      <nestedChildShapes>
+        <elementListCompartment Id="e44bd6c1-0ca3-48d7-a8f9-342c8da81e37" absoluteBounds="6.265, 3.46, 1.9700000000000002, 0.63399251302083326" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="b6319026-d1b9-4dc3-9623-cd0e36254248" absoluteBounds="0.75, 2.625, 2, 1.9631982421874996">
+      <DataClassMoniker Name="/IMDataContext/TaiKhoan" />
+      <nestedChildShapes>
+        <elementListCompartment Id="b09da968-15f4-4739-8c48-0d697692e508" absoluteBounds="0.765, 3.085, 1.9700000000000002, 1.4031982421875" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(5.5 : 2.01044840494792); (7.25 : 2.01044840494792); (7.25 : 3)]" fixedFrom="NotFixed" fixedTo="NotFixed">
+      <AssociationMoniker Name="/IMDataContext/Album/Album_DanhSachHinhTrongAlbum" />
+      <nodes>
+        <classShapeMoniker Id="3fe8326d-94ab-491e-a14d-fcad5f3c57c2" />
+        <classShapeMoniker Id="e8a853ce-a205-4e60-b36c-5b560b4df1b4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 3.47919890494792); (3.65625 : 3.47919890494792); (3.65625 : 2.89589680989583)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/IMDataContext/TaiKhoan/TaiKhoan_Album" />
+      <nodes>
+        <classShapeMoniker Id="b6319026-d1b9-4dc3-9623-cd0e36254248" />
+        <classShapeMoniker Id="3fe8326d-94ab-491e-a14d-fcad5f3c57c2" />
+      </nodes>
+    </associationConnector>
+    <classShape Id="2ac3e162-5a3d-427b-bc96-62c1ac1c93c4" absoluteBounds="3.875, 4.125, 2, 2.7324039713541666">
+      <DataClassMoniker Name="/IMDataContext/KhoHinh" />
+      <nestedChildShapes>
+        <elementListCompartment Id="d426044a-a3fd-4472-8ce4-7713bdb9555e" absoluteBounds="3.89, 4.585, 1.9700000000000002, 2.1724039713541665" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <associationConnector edgePoints="[(4.875 : 4.125); (4.875 : 3.5624995); (6.25 : 3.5624995)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/IMDataContext/KhoHinh/KhoHinh_DanhSachHinhTrongAlbum" />
+      <nodes>
+        <classShapeMoniker Id="2ac3e162-5a3d-427b-bc96-62c1ac1c93c4" />
+        <classShapeMoniker Id="e8a853ce-a205-4e60-b36c-5b560b4df1b4" />
+      </nodes>
+    </associationConnector>
+    <associationConnector edgePoints="[(2.75 : 4.35659912109375); (3.875 : 4.35659912109375)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+      <AssociationMoniker Name="/IMDataContext/TaiKhoan/TaiKhoan_KhoHinh" />
+      <nodes>
+        <classShapeMoniker Id="b6319026-d1b9-4dc3-9623-cd0e36254248" />
+        <classShapeMoniker Id="2ac3e162-5a3d-427b-bc96-62c1ac1c93c4" />
+      </nodes>
+    </associationConnector>
+  </nestedChildShapes>
+</ordesignerObjectsDiagram>

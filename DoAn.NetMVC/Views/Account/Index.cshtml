@@ -1,0 +1,34 @@
+﻿@model DoAn.NetMVC.Models.TaiKhoan
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/_MainLayout.cshtml";
+}
+
+@section title {
+    Quản lý tài khoản    
+}
+
+@section css {
+<link href="~/Contents/CSS/Account.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Contents/JS/fine-uploader.core.js"></script>
+}
+
+@using (Html.BeginForm())
+{
+    <div class="info">
+        <p>Tên tài khoản</p>
+        @Html.TextBoxFor(x => x.TenTaiKhoan, new { @placeholder = "Tên tài khoản" })
+        <p>Email</p>
+        @Html.TextBoxFor(x => x.Email, new { @placeholder = "Email" })
+        <p>Điện thoại</p>
+        @Html.TextBoxFor(x => x.DienThoai, new { @placeholder = "Điện thoại" })
+        <p>Mật khẩu</p>
+        @Html.TextBoxFor(x => x.MatKhau, new { @type = "password", @placeholder = "Mật khẩu" }) 
+        <p><input type="password" placeholder="Xác nhận" /></p>
+        <p>
+            <button type="submit" class="emerald-flat-button" style="width: 160px;">Lưu thay đổi</button>
+        </p>
+    </div>
+}
